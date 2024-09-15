@@ -96,6 +96,3 @@ Bem-vindo ao **Solucionador de 8-Puzzle**, uma aplicação Python com interface 
 - **main.py:** Ponto de entrada da aplicação que inicializa a interface gráfica.
 - **gui.py:** Contém a classe `PuzzleApp` responsável pela interface do usuário e interação com os algoritmos de resolução.
 - **puzzle_solver.py:** Implementa a lógica de resolução do quebra-cabeça, incluindo os algoritmos de busca **A\*** e **Hill Climbing**.
-
----
-# 8puzzle_python
