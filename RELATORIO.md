@@ -16,7 +16,7 @@ Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** ut
   - Utiliza tanto a heurística de **Distância de Manhattan** quanto a de **Misplaced Tiles**.
   
 - **Embaralhamento Personalizado**:
-  - Implementação de um **Spinbox** para definir o número de passos de embaralhamento, permitindo ajustar a complexidade do estado inicial.
+  - Implementação da possibilidade de embaralhamento, permitindo ajustar a complexidade do estado inicial.
   
 - **Animação da Resolução**:
   - Visualização passo a passo da solução encontrada pelos algoritmos.
