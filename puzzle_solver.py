@@ -1,4 +1,3 @@
-# puzzle_solver.py
 import numpy as np
 import heapq
 import random
@@ -18,10 +17,7 @@ class PuzzleSolver:
         self.move_history = []
 
     def shuffle(self, steps=100):
-        """Embaralha o quebra-cabeça realizando movimentos aleatórios a partir do Estado Atual,
-        garantindo que apenas movimentos válidos sejam realizados e evitando movimentos
-        redundantes imediatos.
-        """
+        """Embaralha o quebra-cabeça"""
         self.move_history.clear()
         state_copy = np.copy(self.state)  # Inicia a partir do Estado Atual
         last_move = None  # Para evitar movimentos redundantes
@@ -111,13 +107,7 @@ class PuzzleSolver:
         return possible_moves
 
     def a_star(self, heuristic):
-        """Executa o algoritmo A* com a heurística especificada.
-
-        Retorna:
-            path (lista de estados como arrays NumPy) se solução encontrada, caso contrário None
-            nodes_visited (int)
-            time_taken (float)
-        """
+        """Executa o algoritmo A* com a heurística especificada."""
         def reconstruct_path(came_from, current):
             """Reconstrói o caminho do início até o objetivo."""
             path = [current]
