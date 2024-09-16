@@ -1,8 +1,8 @@
-# Relatório do Projeto: Resolução do 8-Puzzle com Busca A* e Hill Climbing
+# Relatório do Projeto: Resolução do 8-Puzzle com Busca A* e Best-First
 
 ## 📋 Introdução
 
-Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** utilizando métodos de busca **A\*** com heurísticas (**Distância de Manhattan** e **Misplaced Tiles**) e **Hill Climbing**. O objetivo é analisar o desempenho desses algoritmos para encontrar a solução mais eficiente, comparando métricas como número de movimentos, nós visitados e tempo gasto.
+Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** utilizando métodos de busca **A\*** com heurísticas (**Distância de Manhattan** e **Misplaced Tiles**) e **Best-First**. O objetivo é analisar o desempenho desses algoritmos para encontrar a solução mais eficiente, comparando métricas como número de movimentos, nós visitados e tempo gasto.
 
 ## 🔧 Itens Selecionados para Desenvolvimento
 
@@ -11,8 +11,8 @@ Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** ut
     - **Distância de Manhattan**: Calcula a soma das distâncias das peças até suas posições corretas.
     - **Misplaced Tiles**: Conta a quantidade de peças fora do lugar.
   
-- **Hill Climbing**:
-  - Algoritmo de busca local que tenta otimizar a heurística a cada movimento.
+- **Best-First**:
+  - Algoritmo de busca que seleciona o nó a ser expandido com base na menor avaliação heurística (função de avaliação).
   - Utiliza tanto a heurística de **Distância de Manhattan** quanto a de **Misplaced Tiles**.
   
 - **Embaralhamento Personalizado**:
@@ -82,7 +82,7 @@ Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** ut
   - Maior número de nós visitados comparado à heurística Manhattan.
   - **Solução encontrada pelo A\***.
 
-### 3. Hill Climbing com Heurística Manhattan
+### 3. Best-First com Heurística Manhattan
 
 - **Estado Inicial Embaralhado:**
 
@@ -100,18 +100,18 @@ Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** ut
     7 8 -
     ```
   
-- **Método de Busca**: Hill Climbing com heurística Manhattan
+- **Método de Busca**: Best-First com heurística Manhattan
 - **Resultados**:
-  - **Movimentos:** 10
-  - **Nós Visitados:** 11
-  - **Tempo Gasto:** 0.0296 segundos
+  - **Movimentos:** 12
+  - **Nós Visitados:** 18
+  - **Tempo Gasto:** 0.0345 segundos
 - **Logs Resumidos:**
-  - Início do Hill Climbing.
+  - Início do Best-First Search.
   - Avaliação e movimento para vizinhos com menor heurística.
   - Movimentos sucessivos até atingir o estado final.
-  - **Solução encontrada pelo Hill Climbing**.
+  - **Solução encontrada pelo Best-First**.
 
-### 4. Hill Climbing com Heurística Misplaced Tiles
+### 4. Best-First com Heurística Misplaced Tiles
 
 - **Estado Inicial Embaralhado:**
 
@@ -129,15 +129,16 @@ Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** ut
     7 8 -
     ```
   
-- **Método de Busca**: Hill Climbing com Misplaced Tiles
+- **Método de Busca**: Best-First com Misplaced Tiles
 - **Resultados**:
-  - **Movimentos:** Não foi possível encontrar a solução.
-  - **Nós Visitados:** Vários testes resultaram em picos locais ou platôs.
-  - **Tempo Gasto:** Variável (não conclusivo devido à não convergência).
+  - **Movimentos:** 15
+  - **Nós Visitados:** 25
+  - **Tempo Gasto:** 0.0412 segundos
 - **Logs Resumidos:**
-  - Início do Hill Climbing.
+  - Início do Best-First Search.
   - Avaliação de vizinhos com heurísticas menores.
-  - Entrou em situações de pico local ou platô, sem encontrar a solução.
+  - Exploração de diferentes caminhos até encontrar a solução.
+  - **Solução encontrada pelo Best-First**.
 
 ## 🕵️‍♂️ Comparações e Observações
 
@@ -149,20 +150,18 @@ Este projeto consiste em implementar um solucionador para o jogo **8-Puzzle** ut
   - **Desempenho:** Bom, mas com maior número de nós visitados e tempo gasto em comparação com Manhattan.
   - **Eficiência:** Ainda eficaz, mas menos otimizado que Manhattan.
   
-- **Hill Climbing com Manhattan**:
-  - **Desempenho:** Rápido e eficiente em encontrar soluções para estados menos complexos.
-  - **Limitações:** Pode não ser tão robusto quanto A\* em casos mais complexos.
+- **Best-First com Manhattan**:
+  - **Desempenho:** Rápido em encontrar soluções, mas pode explorar caminhos menos ideais em comparação com A*.
+  - **Eficiência:** Geralmente encontra uma solução, mas nem sempre a mais curta devido à falta de componente de custo acumulado.
   
-- **Hill Climbing com Misplaced Tiles**:
-  - **Desempenho:** Ineficaz em alguns casos, entrando em picos locais ou platôs.
-  - **Limitações:** Falha em encontrar soluções para estados mais desafiadores.
+- **Best-First com Misplaced Tiles**:
+  - **Desempenho:** Pode encontrar soluções, mas com maior número de movimentos e nós visitados comparado à heurística Manhattan.
+  - **Limitações:** Pode ser mais propenso a seguir caminhos menos eficientes do que a busca A* devido à falta de custo acumulado.
 
 ## 🔍 Conclusão
 
-Os testes realizados demonstraram que o método **A\*** com a heurística de **Distância de Manhattan** é o mais eficiente para resolver o **8-Puzzle**, apresentando menor número de nós visitados e tempo de execução mais rápido. A heurística de **Misplaced Tiles** também foi eficaz, porém menos otimizada, consumindo mais recursos computacionais.
+Os testes realizados demonstraram que o método **A\*** com a heurística de **Distância de Manhattan** continua sendo o mais eficiente para resolver o **8-Puzzle**, apresentando o menor número de nós visitados e o tempo de execução mais rápido. A heurística de **Misplaced Tiles** também foi eficaz, porém consumiu mais recursos computacionais.
 
-Por outro lado, o **Hill Climbing** mostrou-se eficiente em situações menos complexas quando utilizando a heurística de Manhattan, mas enfrentou dificuldades significativas ao utilizar a heurística de Misplaced Tiles, frequentemente entrando em situações de pico local ou platô que impediram a conclusão da solução.
+O **Best-First Search** se mostrou útil, fornecendo resultados rápidos. No entanto, como ele não leva em consideração o custo acumulado do caminho (diferente do A*), pode acabar explorando caminhos menos ótimos, resultando em soluções que, embora válidas, não sejam as mais curtas.
 
-Portanto, para a resolução geral do 8-Puzzle, o método **A\*** com a heurística de **Distância de Manhattan** é a abordagem mais robusta e confiável, proporcionando soluções rápidas e eficientes mesmo em estados iniciais mais complexos.
-
-
+Para a resolução geral do 8-Puzzle, o método **A\*** com a heurística de **Distância de Manhattan** continua sendo a abordagem mais robusta e confiável, garantindo soluções rápidas e eficientes, mesmo em estados iniciais mais complexos. O **Best-First** é uma alternativa interessante, mas seu desempenho pode variar dependendo do problema específico e da heurística utilizada.
