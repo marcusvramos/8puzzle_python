@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import simpledialog, messagebox
-import tkinter.ttk as ttk  # Import adicional para Spinbox
+import tkinter.ttk as ttk
 from puzzle_solver import PuzzleSolver
 import numpy as np
 import time
