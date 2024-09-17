@@ -1,6 +1,6 @@
 # 🧩 Solucionador de 8-Puzzle 🧩
 
-Bem-vindo ao **Solucionador de 8-Puzzle**, uma aplicação Python com interface gráfica desenvolvida usando Tkinter. Este projeto permite que você embaralhe um quebra-cabeça 8-puzzle, defina estados finais personalizados e encontre soluções utilizando algoritmos de busca **A\*** e **Hill Climbing**. Além disso, a aplicação oferece animações das soluções e logs detalhados para acompanhamento do processo de resolução.
+Bem-vindo ao **Solucionador de 8-Puzzle**, uma aplicação Python com interface gráfica desenvolvida usando Tkinter. Este projeto permite que você embaralhe um quebra-cabeça 8-puzzle, defina estados finais personalizados e encontre soluções utilizando algoritmos de busca **A\*** e **Best-First**. Além disso, a aplicação oferece animações das soluções e logs detalhados para acompanhamento do processo de resolução.
 
 ## 📋 Funcionalidades
 
@@ -12,7 +12,7 @@ Bem-vindo ao **Solucionador de 8-Puzzle**, uma aplicação Python com interface 
 
 - **🔍 Algoritmos de Busca:**
   - **A\***: Encontra o caminho mais curto até a solução utilizando heurísticas.
-  - **Hill Climbing**: Busca local para encontrar soluções iterativamente.
+  - **Best-First**: Explora os estados candidatos com base na menor avaliação heurística (função de avaliação).
 
 - **⏱️ Animação de Resolução:**
   - Visualize passo a passo a solução encontrada pelos algoritmos.
@@ -79,7 +79,7 @@ Bem-vindo ao **Solucionador de 8-Puzzle**, uma aplicação Python com interface 
    - Confirme para atualizar o estado final e o estado inicial.
 
 3. **🔍 Selecionar Algoritmo de Busca e Heurística:**
-   - Escolha entre **A\*** e **Hill Climbing** no menu **"Método de Busca"**.
+   - Escolha entre **A\*** e **Best-First** no menu **"Método de Busca"**.
    - Selecione a heurística desejada (**Manhattan** ou **Misplaced Tiles**) no menu **"Heurística"**.
 
 4. **✅ Resolver o Quebra-Cabeça:**
@@ -95,4 +95,4 @@ Bem-vindo ao **Solucionador de 8-Puzzle**, uma aplicação Python com interface 
 
 - **main.py:** Ponto de entrada da aplicação que inicializa a interface gráfica.
 - **gui.py:** Contém a classe `PuzzleApp` responsável pela interface do usuário e interação com os algoritmos de resolução.
-- **puzzle_solver.py:** Implementa a lógica de resolução do quebra-cabeça, incluindo os algoritmos de busca **A\*** e **Hill Climbing**.
+- **puzzle_solver.py:** Implementa a lógica de resolução do quebra-cabeça, incluindo os algoritmos de busca **A\*** e **Best-First**.
