@@ -72,6 +72,21 @@ class PuzzleSolver:
                     distance += abs(i - goal_i) + abs(j - goal_j)
         return distance
 
+    def heuristic_wrapper(self, heuristic_func, level):
+        def heuristic(state):
+            if level == 1:
+                return heuristic_func(state)
+            elif level == 2:
+                min_heuristic = float('inf')
+                for child in self.get_possible_moves(state):
+                    h = heuristic_func(child)
+                    if h < min_heuristic:
+                        min_heuristic = h
+                return min_heuristic
+            else:
+                return heuristic_func(state)
+        return heuristic
+
     def get_possible_moves(self, state):
         i, j = np.where(state == 0)
         i, j = int(i[0]), int(j[0])
@@ -191,9 +206,10 @@ class PuzzleSolver:
 
                 if neighbor_tuple not in visited:
                     came_from[neighbor_tuple] = current_tuple
-                    heapq.heappush(frontier, (heuristic(neighbor), neighbor_tuple))
+                    h = heuristic(neighbor)
+                    heapq.heappush(frontier, (h, neighbor_tuple))
 
-                    logging.debug(f'Explorando vizinho com heurística={heuristic(neighbor)}:\n{neighbor}')
+                    logging.debug(f'Explorando vizinho com heurística={h}:\n{neighbor}')
 
         end_time = time.time()
         logging.info('Best-First não conseguiu encontrar uma solução.')

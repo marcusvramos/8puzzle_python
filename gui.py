@@ -10,6 +10,7 @@ class PuzzleApp:
         self.root.title("🧩 8-Puzzle Solver 🧩")
         self.puzzle = PuzzleSolver()
         self.selected_heuristic = None
+        self.heuristic_level = 1
         self.create_widgets()
 
     def create_widgets(self):
@@ -56,6 +57,13 @@ class PuzzleApp:
         self.animation_speed_var = tk.IntVar(value=500)  # Valor padrão em milissegundos
         self.animation_speed_scale = tk.Scale(selection_frame, from_=100, to=2000, orient=tk.HORIZONTAL, variable=self.animation_speed_var, length=200)
         self.animation_speed_scale.grid(row=3, column=1, padx=5, pady=5)
+
+        tk.Label(selection_frame, text="🧮 Nível da Heurística:", font=("Helvetica", 12)).grid(row=4, column=0, padx=5, pady=5, sticky='e')
+        self.heuristic_level_var = tk.IntVar(value=1)
+        heuristic_level_options = [1, 2]
+        self.heuristic_level_menu = tk.OptionMenu(selection_frame, self.heuristic_level_var, *heuristic_level_options)
+        self.heuristic_level_menu.config(width=30)
+        self.heuristic_level_menu.grid(row=4, column=1, padx=5, pady=5)
 
         button_frame = tk.Frame(self.root)
         button_frame.pack(pady=10)
@@ -164,6 +172,7 @@ class PuzzleApp:
     def solve(self):
         search_type = self.search_var.get()
         heuristic_type = self.heuristic_var.get()
+        heuristic_level = self.heuristic_level_var.get()
 
         if heuristic_type == "Manhattan":
             heuristic_func = self.puzzle.manhattan_distance
@@ -188,9 +197,9 @@ class PuzzleApp:
         time_taken = 0.0
 
         if search_type == "A*":
-            path, nodes_visited, time_taken = self.puzzle.a_star(heuristic_func)
+            path, nodes_visited, time_taken = self.puzzle.a_star(self.puzzle.heuristic_wrapper(heuristic_func, heuristic_level))
         elif search_type == "Best-First":
-            path, nodes_visited, time_taken = self.puzzle.best_first_search(heuristic_func)
+            path, nodes_visited, time_taken = self.puzzle.best_first_search(self.puzzle.heuristic_wrapper(heuristic_func, heuristic_level))
         else:
             messagebox.showerror("❌ Erro", "Tipo de busca inválido!")
             return
@@ -214,16 +223,16 @@ class PuzzleApp:
                 self.update_initial_canvas()
                 
                 if self.selected_heuristic == self.puzzle.manhattan_distance:
-                    heuristic_value = self.puzzle.manhattan_distance(current_state)
                     heuristic_name = "Manhattan"
                 elif self.selected_heuristic == self.puzzle.misplaced_tiles:
-                    heuristic_value = self.puzzle.misplaced_tiles(current_state)
                     heuristic_name = "Misplaced Tiles"
                 else:
-                    heuristic_value = "N/A"
                     heuristic_name = "Heurística Não Definida"
+
+                heuristic_level = self.heuristic_level_var.get()
+                heuristic_value = self.puzzle.heuristic_wrapper(self.selected_heuristic, heuristic_level)(current_state)
                 
-                self.heuristic_label.config(text=f"📏 Heurística ({heuristic_name}): {heuristic_value}")
+                self.heuristic_label.config(text=f"📏 Heurística ({heuristic_name}, Nível {heuristic_level}): {heuristic_value}")
                 self.root.after(animation_speed, lambda: animate_step(step_index + 1))
             else:
                 pass
