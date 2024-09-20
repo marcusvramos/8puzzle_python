@@ -33,14 +33,14 @@ class PuzzleApp:
         selection_frame.pack(pady=10)
 
         tk.Label(selection_frame, text="🔍 Método de Busca:", font=("Helvetica", 12)).grid(row=0, column=0, padx=5, pady=5, sticky='e')
-        self.search_var = tk.StringVar(value="A*")  # Inicialização correta
+        self.search_var = tk.StringVar(value="A*")
         search_options = ["A*", "Best-First"]
         self.search_menu = tk.OptionMenu(selection_frame, self.search_var, *search_options)
         self.search_menu.config(width=30)
         self.search_menu.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(selection_frame, text="📏 Heurística:", font=("Helvetica", 12)).grid(row=1, column=0, padx=5, pady=5, sticky='e')
-        self.heuristic_var = tk.StringVar(value="Manhattan")  # Inicialização correta
+        self.heuristic_var = tk.StringVar(value="Manhattan") 
         heuristic_options = ["Manhattan", "Misplaced Tiles"]
         self.heuristic_menu = tk.OptionMenu(selection_frame, self.heuristic_var, *heuristic_options)
         self.heuristic_menu.config(width=30)
@@ -48,13 +48,13 @@ class PuzzleApp:
 
         tk.Label(selection_frame, text="🎲 Passos de Embaralhamento:", font=("Helvetica", 12)).grid(row=2, column=0, padx=5, pady=5, sticky='e')
         
-        self.shuffle_steps_var = tk.IntVar(value=10)  # Valor padrão
+        self.shuffle_steps_var = tk.IntVar(value=10)
         self.shuffle_steps_spinbox = tk.Spinbox(selection_frame, from_=1, to=1000, textvariable=self.shuffle_steps_var, width=28)
         self.shuffle_steps_spinbox.grid(row=2, column=1, padx=5, pady=5)
 
         tk.Label(selection_frame, text="⏱️ Velocidade da Animação (ms):", font=("Helvetica", 12)).grid(row=3, column=0, padx=5, pady=5, sticky='e')
         
-        self.animation_speed_var = tk.IntVar(value=500)  # Valor padrão em milissegundos
+        self.animation_speed_var = tk.IntVar(value=500)
         self.animation_speed_scale = tk.Scale(selection_frame, from_=100, to=2000, orient=tk.HORIZONTAL, variable=self.animation_speed_var, length=200)
         self.animation_speed_scale.grid(row=3, column=1, padx=5, pady=5)
 
@@ -70,6 +70,9 @@ class PuzzleApp:
 
         shuffle_button = tk.Button(button_frame, text="🔄 Embaralhar", command=self.shuffle_puzzle)
         shuffle_button.pack(side=tk.LEFT, padx=5)
+
+        define_initial_button = tk.Button(button_frame, text="🟢 Definir Estado Inicial", command=self.set_initial_state)
+        define_initial_button.pack(side=tk.LEFT, padx=5)
 
         define_goal_button = tk.Button(button_frame, text="🎯 Definir Estado Final", command=self.set_goal_state)
         define_goal_button.pack(side=tk.LEFT, padx=5)
@@ -150,8 +153,29 @@ class PuzzleApp:
         self.puzzle.state[i, j], self.puzzle.state[new_i, new_j] = self.puzzle.state[new_i, new_j], self.puzzle.state[i, j]
         self.update_initial_canvas()
 
+    def set_initial_state(self):
+        input_state = simpledialog.askstring("🟢 Definir Estado Inicial", "Digite o estado inicial (ex: 1 2 3 4 5 6 7 8 0):")
+        if input_state:
+            try:
+                numbers = list(map(int, input_state.strip().split()))
+                if len(numbers) != self.puzzle.n * self.puzzle.n:
+                    messagebox.showerror("❌ Erro", f"O estado inicial deve conter {self.puzzle.n * self.puzzle.n} números.")
+                    return
+                if sorted(numbers) != list(range(self.puzzle.n * self.puzzle.n)):
+                    messagebox.showerror("❌ Erro", "O estado deve conter os números de 0 a 8, sem repetições.")
+                    return
+                new_initial = np.array(numbers).reshape(self.puzzle.n, self.puzzle.n)
+                if not self.puzzle.is_solvable(new_initial):
+                    messagebox.showerror("❌ Erro", "O estado inicial fornecido não é solucionável.")
+                    return
+                self.puzzle.state = new_initial
+                self.update_initial_canvas()
+                logging.info("Estado inicial definido pelo usuário.")
+            except ValueError:
+                messagebox.showerror("❌ Erro", "Entrada inválida! Certifique-se de inserir números inteiros separados por espaço.")
+
     def set_goal_state(self):
-        input_state = simpledialog.askstring("🔢 Input", "Digite o estado final (ex: 1 2 3 4 5 6 0 7 8):")
+        input_state = simpledialog.askstring("🎯 Definir Estado Final", "Digite o estado final (ex: 1 2 3 4 5 6 0 7 8):")
         if input_state:
             try:
                 numbers = list(map(int, input_state.strip().split()))
@@ -162,10 +186,14 @@ class PuzzleApp:
                     messagebox.showerror("❌ Erro", "O estado deve conter os números de 0 a 8, sem repetições.")
                     return
                 new_goal = np.array(numbers).reshape(self.puzzle.n, self.puzzle.n)
+                if not self.puzzle.is_solvable(new_goal):
+                    messagebox.showerror("❌ Erro", "O estado final fornecido não é solucionável.")
+                    return
                 self.puzzle.goal_state = new_goal
-                self.puzzle.state = new_goal.copy()  # Define o Estado Inicial igual ao Estado Final
+                self.puzzle.state = new_goal.copy() 
                 self.update_goal_canvas()
-                self.update_initial_canvas()  # Atualiza a exibição do Estado Inicial
+                self.update_initial_canvas()  
+                logging.info("Estado final definido pelo usuário.")
             except ValueError:
                 messagebox.showerror("❌ Erro", "Entrada inválida! Certifique-se de inserir números inteiros separados por espaço.")
 
@@ -196,10 +224,12 @@ class PuzzleApp:
         nodes_visited = 0
         time_taken = 0.0
 
+        heuristic = self.puzzle.heuristic_wrapper(heuristic_func, heuristic_level)
+
         if search_type == "A*":
-            path, nodes_visited, time_taken = self.puzzle.a_star(self.puzzle.heuristic_wrapper(heuristic_func, heuristic_level))
+            path, nodes_visited, time_taken = self.puzzle.a_star(heuristic)
         elif search_type == "Best-First":
-            path, nodes_visited, time_taken = self.puzzle.best_first_search(self.puzzle.heuristic_wrapper(heuristic_func, heuristic_level))
+            path, nodes_visited, time_taken = self.puzzle.best_first_search(heuristic)
         else:
             messagebox.showerror("❌ Erro", "Tipo de busca inválido!")
             return
