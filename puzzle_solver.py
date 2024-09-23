@@ -14,6 +14,21 @@ class PuzzleSolver:
         self.goal_state[-1, -1] = 0 
         self.state = np.copy(self.goal_state)
         self.move_history = []
+        self.create_goal_position_map() 
+        
+    def create_goal_position_map(self):
+        goal_map = {}
+        for i in range(self.n):
+            for j in range(self.n):
+                num = self.goal_state[i, j]
+                if num != 0:
+                    goal_map[num] = (i, j)
+        self.goal_map = goal_map
+
+    def set_goal_state(self, new_goal_state):
+        self.goal_state = new_goal_state
+        self.create_goal_position_map()
+        logging.info("Estado final atualizado e goal_map criado.")        
 
     def shuffle(self, steps=100):
         self.move_history.clear()
@@ -68,7 +83,7 @@ class PuzzleSolver:
             for j in range(self.n):
                 num = state[i, j]
                 if num != 0:
-                    goal_i, goal_j = divmod(num - 1, self.n)
+                    goal_i, goal_j = self.goal_map[num]
                     distance += abs(i - goal_i) + abs(j - goal_j)
         return distance
 

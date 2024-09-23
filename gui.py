@@ -189,10 +189,10 @@ class PuzzleApp:
                 if not self.puzzle.is_solvable(new_goal):
                     messagebox.showerror("❌ Erro", "O estado final fornecido não é solucionável.")
                     return
-                self.puzzle.goal_state = new_goal
-                self.puzzle.state = new_goal.copy() 
+                self.puzzle.set_goal_state(new_goal)
+                self.puzzle.state = np.copy(self.puzzle.goal_state)
                 self.update_goal_canvas()
-                self.update_initial_canvas()  
+                self.update_initial_canvas()
                 logging.info("Estado final definido pelo usuário.")
             except ValueError:
                 messagebox.showerror("❌ Erro", "Entrada inválida! Certifique-se de inserir números inteiros separados por espaço.")
