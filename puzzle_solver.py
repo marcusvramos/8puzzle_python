@@ -62,15 +62,6 @@ class PuzzleSolver:
             i, j = int(i[0]), int(j[0])
             self.state[i, j], self.state[new_i, new_j] = self.state[new_i, new_j], self.state[i, j]
 
-    def is_solvable(self, state):
-        flat_state = state.flatten()
-        inv_count = 0
-        for i in range(len(flat_state)):
-            for j in range(i + 1, len(flat_state)):
-                if flat_state[i] > flat_state[j] and flat_state[j] != 0:
-                    inv_count += 1
-        return inv_count % 2 == 0
-
     def is_solved(self):
         return np.array_equal(self.state, self.goal_state)
 

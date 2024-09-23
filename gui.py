@@ -165,9 +165,6 @@ class PuzzleApp:
                     messagebox.showerror("❌ Erro", "O estado deve conter os números de 0 a 8, sem repetições.")
                     return
                 new_initial = np.array(numbers).reshape(self.puzzle.n, self.puzzle.n)
-                if not self.puzzle.is_solvable(new_initial):
-                    messagebox.showerror("❌ Erro", "O estado inicial fornecido não é solucionável.")
-                    return
                 self.puzzle.state = new_initial
                 self.update_initial_canvas()
                 logging.info("Estado inicial definido pelo usuário.")
@@ -186,9 +183,6 @@ class PuzzleApp:
                     messagebox.showerror("❌ Erro", "O estado deve conter os números de 0 a 8, sem repetições.")
                     return
                 new_goal = np.array(numbers).reshape(self.puzzle.n, self.puzzle.n)
-                if not self.puzzle.is_solvable(new_goal):
-                    messagebox.showerror("❌ Erro", "O estado final fornecido não é solucionável.")
-                    return
                 self.puzzle.set_goal_state(new_goal)
                 self.puzzle.state = np.copy(self.puzzle.goal_state)
                 self.update_goal_canvas()
@@ -211,10 +205,6 @@ class PuzzleApp:
             return
 
         self.selected_heuristic = heuristic_func
-
-        if not self.puzzle.is_solvable(self.puzzle.state):
-            messagebox.showerror("❌ Erro", "O estado atual não é solucionável.")
-            return
 
         self.metrics_label.config(text="🔄 Resolvendo...")
         self.heuristic_label.config(text="")
